@@ -1,0 +1,32 @@
+@startuml <Name>
+
+' Diagram Type
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' C4 models
+Person(person, "Customer", "Cinch customer who is buying a vehicle online")
+
+Container_Boundary(webApp, "Web Application", "") {
+    Container(landingApp, "Homepage", "React/Nx", "Landing microsite")
+    Container(searchApp, "Search", "React/Nx", "Search microsite")
+    Container(productApp, "Product Details", "React/Nx", "Product Details microsite")
+    Container(orderApp, "Orders", "React/Nx", "Ordersmicrosite")
+
+    Container(searchApi, "Search API", "API Gateway", "API that provides vehicle filtering and alerting")
+    Container(productApi, "Product API", "API Gateway", "API that manages vehicle details")
+    Container(orderApi, "Orders API", "API Gateway", "API that manages orders")
+
+    Rel(searchApp, searchApi, "Makes calls to", "JSON/HTTPS")
+    Rel(productApp, productApi, "Makes calls to", "JSON/HTTPS")
+    Rel(orderApp, orderApi, "Makes calls to", "JSON/HTTPS")
+}
+
+System_Ext(cms, "CMS", "Content Management System")
+
+Rel(person, landingApp, "Visits", "HTTPS")
+Rel(landingApp, cms, "Makes calls to")
+Rel(person, searchApp, "Visits", "HTTPS")
+Rel(person, productApp, "Visits", "HTTPS")
+Rel(person, orderApp, "Visits", "HTTPS")
+
+@enduml

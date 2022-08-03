@@ -1,0 +1,21 @@
+@startuml <Name>
+
+' Diagram Type
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' C4 models
+Person(person, "Customer", "Cinch customer who is buying a vehicle online")
+
+System_Boundary(cinch, "Cinch E-commerce Platform", "Allows customers to search, view and purchase vehicles") {
+    Container(webApp, "Web Application", "React/Nx", "Web frontend for buying a vehicle")
+    Container(api, "API Application", "API Gateway", "API that manages vehicle details")
+    ContainerDb(db, "Database", "DynamoDB", "Tables to store vehicle and customer data")
+
+    Rel(webApp, api, "Makes calls to", "JSON/HTTPS")
+    Rel(api, db, "Reads and writes to", "JSON/HTTPS")
+}
+
+Rel(person, webApp, "Visits", "HTTPS")
+
+@enduml

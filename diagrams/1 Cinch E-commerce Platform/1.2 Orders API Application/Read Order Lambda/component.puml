@@ -1,0 +1,17 @@
+@startuml Event Processing Container Diagram
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(api, "API Application", "API Gateway", "Orders API")
+ContainerDb(table, "Orders", "DynamoDB", "Table of orders")
+
+Container_Boundary(function, "Read Order Lambda") {
+    Component(handler, "Order Handler", "Typescript", "Handler to read orders")
+    Component(validator, "Request Validator", "Typescript", "Validate incoming request")
+}
+
+Rel(api, handler, "Create order", "JSON/HTTPS")
+Rel(handler, validator, "Validate event")
+Rel(handler, table, "Reads from", "JSON/HTTPS")
+
+@enduml

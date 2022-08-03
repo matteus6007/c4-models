@@ -1,0 +1,22 @@
+@startuml Event Processing Container Diagram
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(api, "API Application", "API Gateway", "Orders API")
+ContainerDb(table, "Orders", "DynamoDB", "Table of orders")
+
+Container_Boundary(function, "Write Order Lambda") {
+    Component(handler, "Order Handler", "Typescript", "Handler to persist new orders")
+    Component(validator, "Request Validator", "Typescript", "Validate incoming request")
+}
+
+Container(eventBus, "Event Bus", "EventBridge", "Shared event bus")
+Container(dlq, "DLQ", "SQS", "Dead letter queue")
+
+Rel(api, handler, "Create order", "JSON/HTTPS")
+Rel(handler, validator, "Validate event")
+Rel(handler, table, "Writes to", "JSON/HTTPS")
+Rel(handler, dlq, "Event Processing Failures", "SQS")
+Rel(handler, eventBus, "Publish domain event", "EventBridge")
+
+@enduml

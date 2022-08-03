@@ -1,0 +1,21 @@
+@startuml <Name>
+
+' Diagram Type
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' C4 models
+Person(person, "Customer", "Cinch customer who is buying a vehicle online")
+
+System(cinch, "Cinch E-commerce Platform", "Allows customers to search, view and purchase vehicles")
+System_Ext(emailPlatform, "Email Platform", "Customer.io email marketing platform")
+System_Ext(cdp, "Customer Data Platform (CDP)", "Customer profiling (Segment)")
+System(dwh, "Data Warehouse", "Reporting and data insights (Snowflake)")
+
+Rel(person, cinch, "Search, view and purchase vehicles", "HTTPS")
+Rel(cinch, cdp, "Send customer interaction and domain events to")
+Rel(cdp, emailPlatform, "Send email using")
+Rel(emailPlatform, person, "Sends email to", "SMTP")
+Rel(cinch, dwh, "Domain events", "EventBridge")
+
+@enduml

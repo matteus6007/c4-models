@@ -1,0 +1,24 @@
+@startuml <Name>
+
+' Diagram Type
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' C4 models
+Person(person, "Customer", "Cinch customer who is buying a vehicle online")
+
+Container(webApp, "Microsite", "React/Nx", "Web frontend for managing orders")
+
+Container_Boundary(api, "API Application", "API Gateway that manages orders") {
+    Container(writeLambda, "Write Order", "Lambda", "Function for inserting/updating data")
+    Container(readLambda, "Read Order", "Lambda", "Function for reading data")
+}
+
+ContainerDb(db, "Database", "DynamoDB", "Tables to store vehicle and customer data")
+
+Rel(person, webApp, "Visits", "HTTPS")
+Rel(webApp, writeLambda, "Create order", "JSON/HTTPS")
+Rel(writeLambda, db, "Writes to", "JSON/HTTPS")
+Rel(webApp, readLambda, "Get order", "JSON/HTTPS")
+Rel(readLambda, db, "Reads from", "JSON/HTTPS")
+
+@enduml
